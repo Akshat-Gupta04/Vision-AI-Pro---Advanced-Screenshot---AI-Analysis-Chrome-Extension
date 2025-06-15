@@ -1,0 +1,764 @@
+/* Vision AI Pro - Advanced Content Script Styles */
+
+:root {
+  --vai-primary: #6366f1;
+  --vai-primary-dark: #4f46e5;
+  --vai-secondary: #8b5cf6;
+  --vai-success: #059669;
+  --vai-warning: #d97706;
+  --vai-error: #dc2626;
+  --vai-glass: rgba(255, 255, 255, 0.98);
+  --vai-glass-dark: rgba(248, 250, 252, 0.95);
+  --vai-text-primary: #111827;
+  --vai-text-secondary: #374151;
+  --vai-text-muted: #6b7280;
+  --vai-border: rgba(0, 0, 0, 0.1);
+  --vai-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --vai-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.2);
+  --vai-bg-primary: rgba(255, 255, 255, 0.98);
+  --vai-bg-secondary: rgba(248, 250, 252, 0.95);
+}
+
+/* Main overlay for screenshot selection */
+.vai-screenshot-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(2px) !important;
+  z-index: 2147483640 !important;
+  cursor: crosshair !important;
+  pointer-events: all !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  animation: vai-fade-in 0.3s ease !important;
+}
+
+/* Selection box */
+.vai-screenshot-selection {
+  position: absolute !important;
+  border: 2px solid var(--vai-primary) !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  backdrop-filter: blur(4px) !important;
+  pointer-events: none !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2),
+              0 8px 32px rgba(99, 102, 241, 0.3) !important;
+  transition: all 0.1s ease !important;
+}
+
+/* Selection handles */
+.vai-selection-handle {
+  position: absolute !important;
+  width: 8px !important;
+  height: 8px !important;
+  background: var(--vai-primary) !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+.vai-selection-handle:hover {
+  transform: scale(1.2) !important;
+  background: var(--vai-primary-dark) !important;
+}
+
+/* Element highlight */
+.vai-element-highlight {
+  position: absolute !important;
+  border: 3px solid var(--vai-success) !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+  backdrop-filter: blur(2px) !important;
+  pointer-events: none !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
+              0 8px 32px rgba(16, 185, 129, 0.3) !important;
+  animation: vai-pulse 2s infinite !important;
+  z-index: 2147483641 !important;
+}
+
+/* Instruction tooltip */
+.vai-instruction {
+  position: fixed !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(17, 24, 39, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  color: #f9fafb !important;
+  padding: 18px 28px !important;
+  border-radius: 16px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  z-index: 2147483642 !important;
+  box-shadow: var(--vai-shadow-lg) !important;
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
+  animation: vai-slide-down 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  max-width: 90vw !important;
+  text-align: center !important;
+  line-height: 1.5 !important;
+}
+
+.vai-instruction kbd {
+  background: rgba(255, 255, 255, 0.15) !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  margin: 0 3px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #f9fafb !important;
+}
+
+/* AI Analysis Dialog */
+.vai-ai-dialog {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 650px !important;
+  max-width: 95vw !important;
+  max-height: 85vh !important;
+  background: var(--vai-bg-primary) !important;
+  backdrop-filter: blur(25px) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15),
+              0 0 0 1px var(--vai-border) !important;
+  z-index: 2147483647 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  overflow: hidden !important;
+  border: 2px solid var(--vai-border) !important;
+  animation: vai-scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.vai-dialog-header {
+  padding: 28px 28px 20px 28px !important;
+  border-bottom: 2px solid var(--vai-border) !important;
+  background: var(--vai-bg-secondary) !important;
+  position: relative !important;
+}
+
+.vai-dialog-header::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--vai-primary), var(--vai-secondary)) !important;
+}
+
+.vai-dialog-title {
+  margin: 0 0 18px 0 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, var(--vai-primary), var(--vai-secondary)) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  letter-spacing: -0.5px !important;
+}
+
+.vai-dialog-title::before {
+  content: '✨' !important;
+  font-size: 24px !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.vai-screenshot-preview {
+  width: 100% !important;
+  max-height: 200px !important;
+  object-fit: contain !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.vai-dialog-content {
+  padding: 28px !important;
+  flex: 1 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  gap: 0 !important;
+}
+
+/* Custom scrollbar for dialog content */
+.vai-dialog-content::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.vai-dialog-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 4px !important;
+  margin: 4px !important;
+}
+
+.vai-dialog-content::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4) !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.vai-dialog-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6) !important;
+}
+
+/* Scroll indicator when content overflows */
+.vai-dialog-content.has-scroll::after {
+  content: '↓ Scroll for more' !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  display: block !important;
+  text-align: center !important;
+  padding: 8px !important;
+  background: linear-gradient(transparent, var(--vai-bg-primary)) !important;
+  font-size: 12px !important;
+  color: var(--vai-text-muted) !important;
+  font-weight: 500 !important;
+  pointer-events: none !important;
+}
+
+.vai-input-group {
+  margin-bottom: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+.vai-input-label {
+  display: block !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--vai-text-primary) !important;
+  margin-bottom: 10px !important;
+}
+
+.vai-textarea {
+  width: 100% !important;
+  min-height: 100px !important;
+  padding: 16px !important;
+  border: 2px solid var(--vai-border) !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  resize: vertical !important;
+  background: var(--vai-bg-secondary) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
+  line-height: 1.6 !important;
+  color: var(--vai-text-primary) !important;
+}
+
+.vai-textarea:focus {
+  outline: none !important;
+  border-color: var(--vai-primary) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+  background: var(--vai-bg-primary) !important;
+}
+
+.vai-textarea::placeholder {
+  color: var(--vai-text-muted) !important;
+  font-weight: 400 !important;
+}
+
+.vai-button-group {
+  display: flex !important;
+  gap: 12px !important;
+  margin-top: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+.vai-button {
+  flex: 1 !important;
+  padding: 14px 20px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.vai-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  transition: left 0.5s ease !important;
+}
+
+.vai-button:hover::before {
+  left: 100% !important;
+}
+
+.vai-button-primary {
+  background: linear-gradient(135deg, var(--vai-primary), var(--vai-primary-dark)) !important;
+  color: white !important;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3) !important;
+}
+
+.vai-button-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4) !important;
+}
+
+.vai-button-secondary {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--vai-text-primary) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.vai-button-secondary:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.vai-button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.vai-result {
+  margin-top: 20px !important;
+  padding: 24px !important;
+  background: var(--vai-bg-secondary) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 16px !important;
+  border: 2px solid var(--vai-border) !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  line-height: 1.7 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--vai-text-primary) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  animation: vai-fade-in-up 0.4s ease !important;
+  flex: 1 !important;
+  min-height: 200px !important;
+}
+
+.vai-loading {
+  margin-top: 20px !important;
+  text-align: center !important;
+  color: var(--vai-text-primary) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 20px 16px !important;
+  background: var(--vai-bg-secondary) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 12px !important;
+  border: 2px solid var(--vai-border) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  min-height: auto !important;
+  flex-shrink: 0 !important;
+}
+
+.vai-spinner {
+  width: 24px !important;
+  height: 24px !important;
+  border: 2px solid rgba(99, 102, 241, 0.2) !important;
+  border-top: 2px solid var(--vai-primary) !important;
+  border-radius: 50% !important;
+  animation: vai-spin 1s linear infinite !important;
+}
+
+.vai-error {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+.vai-error-message {
+  color: var(--vai-error) !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Markdown styling for better text display */
+.vai-result .vai-h1 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--vai-primary) !important;
+  margin: 0 0 16px 0 !important;
+  padding-bottom: 8px !important;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.2) !important;
+}
+
+.vai-result .vai-h2 {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--vai-primary-dark) !important;
+  margin: 20px 0 12px 0 !important;
+}
+
+.vai-result .vai-h3 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--vai-text-primary) !important;
+  margin: 16px 0 8px 0 !important;
+}
+
+.vai-result .vai-paragraph {
+  margin: 0 0 12px 0 !important;
+  color: var(--vai-text-primary) !important;
+  line-height: 1.7 !important;
+}
+
+.vai-result .vai-bold {
+  font-weight: 700 !important;
+  color: var(--vai-text-primary) !important;
+}
+
+.vai-result .vai-italic {
+  font-style: italic !important;
+  color: var(--vai-text-secondary) !important;
+}
+
+.vai-result .vai-inline-code {
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: var(--vai-primary) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.vai-result .vai-code-block {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  margin: 16px 0 !important;
+  overflow-x: auto !important;
+}
+
+.vai-result .vai-code-block code {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--vai-text-primary) !important;
+}
+
+.vai-result .vai-list-item {
+  margin: 8px 0 8px 20px !important;
+  color: var(--vai-text-primary) !important;
+  position: relative !important;
+}
+
+.vai-result .vai-list-item::before {
+  content: '•' !important;
+  color: var(--vai-primary) !important;
+  font-weight: bold !important;
+  position: absolute !important;
+  left: -16px !important;
+}
+
+/* Preset prompts */
+.vai-presets {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+.vai-preset {
+  padding: 10px 14px !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  border: 2px solid rgba(99, 102, 241, 0.3) !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--vai-primary) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.vai-preset:hover {
+  background: rgba(99, 102, 241, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Continue/Again button section */
+.vai-continue-section {
+  margin-top: 20px !important;
+  animation: vai-fade-in-up 0.4s ease 0.2s both !important;
+  flex-shrink: 0 !important;
+  padding-top: 16px !important;
+}
+
+.vai-continue-divider {
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent) !important;
+  margin: 0 0 16px 0 !important;
+}
+
+.vai-continue-buttons {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+.vai-continue-btn {
+  flex: 1 !important;
+  min-width: 180px !important;
+  font-size: 13px !important;
+  padding: 12px 16px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.vai-continue-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Animations */
+@keyframes vai-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes vai-slide-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes vai-scale-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes vai-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
+                0 8px 32px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5),
+                0 8px 32px rgba(16, 185, 129, 0.5);
+  }
+}
+
+@keyframes vai-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vai-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vai-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes vai-scale-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vai-ai-dialog {
+    width: 95vw !important;
+    max-height: 90vh !important;
+    margin: 20px !important;
+  }
+
+  .vai-dialog-header,
+  .vai-dialog-content {
+    padding: 20px !important;
+  }
+
+  .vai-button-group {
+    flex-direction: column !important;
+  }
+
+  .vai-continue-buttons {
+    flex-direction: column !important;
+  }
+
+  .vai-continue-btn {
+    min-width: auto !important;
+  }
+
+  .vai-result {
+    max-height: 250px !important;
+    min-height: 150px !important;
+  }
+
+  .vai-loading {
+    padding: 16px 12px !important;
+    gap: 8px !important;
+  }
+
+  .vai-spinner {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .vai-instruction {
+    font-size: 13px !important;
+    padding: 14px 18px !important;
+  }
+}
+
+@media (max-height: 700px) {
+  .vai-ai-dialog {
+    max-height: 95vh !important;
+  }
+
+  .vai-result {
+    max-height: 200px !important;
+    min-height: 120px !important;
+  }
+
+  .vai-loading {
+    padding: 12px 10px !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+  }
+
+  .vai-dialog-header,
+  .vai-dialog-content {
+    padding: 20px !important;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --vai-glass: rgba(17, 24, 39, 0.98);
+    --vai-glass-dark: rgba(31, 41, 55, 0.95);
+    --vai-text-primary: #f9fafb;
+    --vai-text-secondary: #e5e7eb;
+    --vai-text-muted: #9ca3af;
+    --vai-border: rgba(255, 255, 255, 0.1);
+    --vai-bg-primary: rgba(17, 24, 39, 0.98);
+    --vai-bg-secondary: rgba(31, 41, 55, 0.95);
+  }
+
+  .vai-ai-dialog {
+    background: var(--vai-bg-primary) !important;
+    color: var(--vai-text-primary) !important;
+    border-color: var(--vai-border) !important;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4),
+                0 0 0 1px var(--vai-border) !important;
+  }
+
+  .vai-dialog-header {
+    border-bottom-color: var(--vai-border) !important;
+    background: var(--vai-bg-secondary) !important;
+  }
+
+  .vai-dialog-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .vai-dialog-content::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.4) !important;
+  }
+
+  .vai-dialog-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.6) !important;
+  }
+
+  .vai-textarea {
+    background: var(--vai-bg-secondary) !important;
+    border-color: var(--vai-border) !important;
+    color: var(--vai-text-primary) !important;
+  }
+
+  .vai-result {
+    background: var(--vai-bg-secondary) !important;
+    border-color: var(--vai-border) !important;
+    color: var(--vai-text-primary) !important;
+  }
+
+  .vai-loading {
+    background: var(--vai-bg-secondary) !important;
+    border-color: var(--vai-border) !important;
+    color: var(--vai-text-primary) !important;
+    padding: 16px 12px !important;
+  }
+
+  .vai-result .vai-code-block {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-color: var(--vai-border) !important;
+  }
+
+  .vai-result .vai-inline-code {
+    background: rgba(99, 102, 241, 0.2) !important;
+    color: #a5b4fc !important;
+  }
+
+  .vai-continue-divider {
+    background: linear-gradient(90deg, transparent, var(--vai-border), transparent) !important;
+  }
+
+  .vai-button-secondary {
+    background: var(--vai-bg-secondary) !important;
+    color: var(--vai-text-primary) !important;
+    border-color: var(--vai-border) !important;
+  }
+}

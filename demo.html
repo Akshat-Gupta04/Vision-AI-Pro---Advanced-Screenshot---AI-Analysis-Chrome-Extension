@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision AI Pro - Demo Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin: 10px 0 0 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin: 0;
+        }
+
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #333;
+            margin: 0 0 20px 0;
+            font-size: 2rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .demo-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-item h4 {
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .demo-item p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            color: #059669;
+            margin: 0 0 20px 0;
+        }
+
+        .instructions ol {
+            color: #333;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .keyboard-shortcuts {
+            background: #1f2937;
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .keyboard-shortcuts h2 {
+            margin: 0 0 20px 0;
+        }
+
+        .shortcut {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .shortcut:last-child {
+            border-bottom: none;
+        }
+
+        .shortcut kbd {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .sample-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .sample-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .sample-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+        }
+
+        .sample-card h4 {
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .sample-card p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vision AI Pro</h1>
+            <p>Advanced Screenshot Capture & AI Analysis Extension</p>
+        </div>
+
+        <div class="instructions">
+            <h2>🚀 How to Use Vision AI Pro</h2>
+            <ol>
+                <li><strong>Install the Extension:</strong> Load this extension in Chrome Developer Mode</li>
+                <li><strong>Set API Key:</strong> Click the extension icon and enter your AI provider API key</li>
+                <li><strong>Choose Capture Method:</strong> Select full page, region, element, or scrolling screenshot</li>
+                <li><strong>AI Analysis:</strong> Let AI analyze your screenshot with custom prompts</li>
+                <li><strong>Export Results:</strong> Save or copy the AI analysis results</li>
+            </ol>
+        </div>
+
+        <div class="keyboard-shortcuts">
+            <h2>⌨️ Keyboard Shortcuts</h2>
+            <div class="shortcut">
+                <span>Full Page Screenshot</span>
+                <kbd>Ctrl+Shift+F</kbd>
+            </div>
+            <div class="shortcut">
+                <span>Region Selection</span>
+                <kbd>Ctrl+Shift+R</kbd>
+            </div>
+            <div class="shortcut">
+                <span>Element Capture</span>
+                <kbd>Ctrl+Shift+E</kbd>
+            </div>
+            <div class="shortcut">
+                <span>Cancel Operation</span>
+                <kbd>Escape</kbd>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>✨ Key Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🎯 Smart Capture</h3>
+                    <p>Multiple capture modes including full page, region selection, element-specific, and scrolling screenshots</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🤖 AI Analysis</h3>
+                    <p>Support for OpenAI GPT-4V, Anthropic Claude, and Google Gemini with custom prompts</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 Modern UI</h3>
+                    <p>Beautiful glassmorphism design with smooth animations and dark/light theme support</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Fast Workflow</h3>
+                    <p>Keyboard shortcuts, context menus, and quick actions for efficient screenshot analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎮 Try These Elements</h2>
+            <p>Use the extension to capture and analyze these different UI elements:</p>
+            <div class="sample-content">
+                <div class="sample-card">
+                    <h4>📊 Dashboard Card</h4>
+                    <p>Perfect for UI/UX analysis and layout understanding</p>
+                </div>
+                <div class="sample-card">
+                    <h4>📝 Form Element</h4>
+                    <p>Great for accessibility and usability testing</p>
+                </div>
+                <div class="sample-card">
+                    <h4>🎯 Button Component</h4>
+                    <p>Ideal for design system documentation</p>
+                </div>
+                <div class="sample-card">
+                    <h4>📱 Navigation Menu</h4>
+                    <p>Excellent for information architecture analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🔧 Supported AI Providers</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <h4>OpenAI GPT-4 Vision</h4>
+                    <p>Best for detailed descriptions and general analysis. Requires API key starting with 'sk-'</p>
+                </div>
+                <div class="demo-item">
+                    <h4>Anthropic Claude</h4>
+                    <p>Excellent for safety-focused analysis and detailed explanations. Requires API key starting with 'sk-ant-'</p>
+                </div>
+                <div class="demo-item">
+                    <h4>Google Gemini</h4>
+                    <p>Great for fast analysis and multilingual support. Requires Google AI Studio API key</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Vision AI Pro v2.0 - Advanced Screenshot & AI Analysis Extension</p>
+            <p>Built with modern web technologies and AI integration</p>
+        </div>
+    </div>
+</body>
+</html>

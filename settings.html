@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vision AI Pro - Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #8b5cf6;
+      --success: #059669;
+      --warning: #d97706;
+      --error: #dc2626;
+      --glass: rgba(255, 255, 255, 0.95);
+      --glass-dark: rgba(255, 255, 255, 0.85);
+      --text-primary: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6b7280;
+      --border: rgba(0, 0, 0, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+      --bg-primary: rgba(255, 255, 255, 0.98);
+      --bg-secondary: rgba(248, 250, 252, 0.95);
+    }
+
+    [data-theme="dark"] {
+      --glass: rgba(17, 24, 39, 0.95);
+      --glass-dark: rgba(31, 41, 55, 0.9);
+      --text-primary: #f9fafb;
+      --text-secondary: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.1);
+      --bg-primary: rgba(17, 24, 39, 0.98);
+      --bg-secondary: rgba(31, 41, 55, 0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(25px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px var(--border);
+      border: 2px solid var(--border);
+      position: relative;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 24px 24px 0 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 20px 0 8px 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--bg-primary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--glass-dark);
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .section {
+      margin-bottom: 32px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 24px;
+      border: 2px solid var(--border);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .setting-item {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .setting-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .setting-description {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .setting-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="number"], input[type="password"], select, textarea {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-primary);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    input[type="text"]::placeholder, input[type="password"]::placeholder, textarea::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-primary);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: var(--border);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: var(--primary);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(24px);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox:checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .checkbox:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    .button-secondary {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .button-secondary:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .status-message {
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--glass-dark);
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      transform: translateY(-3px);
+    }
+
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 16px;
+      display: none;
+      text-align: center;
+    }
+
+    .status-message.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--error);
+    }
+
+    .keyboard-shortcuts {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .shortcut-label {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .shortcut-keys {
+      display: flex;
+      gap: 4px;
+    }
+
+    .key {
+      background: var(--bg-primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .version-info {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section:nth-child(2) { animation-delay: 0.1s; }
+    .section:nth-child(3) { animation-delay: 0.2s; }
+    .section:nth-child(4) { animation-delay: 0.3s; }
+    .section:nth-child(5) { animation-delay: 0.4s; }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        justify-content: center;
+      }
+
+      .keyboard-shortcuts {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .shortcut-keys {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="#" class="back-btn" onclick="window.close()">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back
+      </a>
+      <h1>✨ Vision AI Pro Settings</h1>
+      <p>Configure your advanced visual intelligence preferences</p>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">🤖 AI Provider Configuration</h2>
+
+      <div class="setting-item">
+        <label class="setting-label">Default AI Provider</label>
+        <div class="setting-description">Choose your preferred AI provider for image analysis</div>
+        <div class="setting-control">
+          <select class="form-select" id="defaultProvider">
+            <option value="openai">OpenAI GPT-4 Vision (Recommended)</option>
+            <option value="anthropic">Anthropic Claude 3 Sonnet</option>
+            <option value="google">Google Gemini Pro Vision</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">OpenAI API Key</label>
+        <div class="setting-description">Get your API key from platform.openai.com</div>
+        <div class="setting-control">
+          <input type="password" class="form-input" id="openaiKey" placeholder="sk-proj-...">
+          <button class="btn" onclick="testApiKey('openai')">Test</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Anthropic API Key</label>
+        <div class="setting-description">Get your API key from console.anthropic.com</div>
+        <div class="setting-control">
+          <input type="password" class="form-input" id="anthropicKey" placeholder="sk-ant-...">
+          <button class="btn" onclick="testApiKey('anthropic')">Test</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Google AI API Key</label>
+        <div class="setting-description">Get your API key from makersuite.google.com</div>
+        <div class="setting-control">
+          <input type="password" class="form-input" id="googleKey" placeholder="Google AI Studio Key">
+          <button class="btn" onclick="testApiKey('google')">Test</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">📸 Screenshot Settings</h2>
+
+      <div class="setting-item">
+        <label class="setting-label">Default Image Format</label>
+        <div class="setting-description">Choose the format for captured screenshots</div>
+        <div class="setting-control">
+          <select class="form-select" id="imageFormat">
+            <option value="png">PNG (Best Quality, Larger Size)</option>
+            <option value="jpeg">JPEG (Good Quality, Smaller Size)</option>
+            <option value="webp">WebP (Modern Format, Best Compression)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Image Quality</label>
+        <div class="setting-description">JPEG/WebP quality (1-100, higher = better quality)</div>
+        <div class="setting-control">
+          <input type="number" class="form-input" id="imageQuality" min="1" max="100" value="90" style="max-width: 100px;">
+          <span style="color: var(--text-muted); font-size: 13px;">90%</span>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">High-DPI Capture</label>
+        <div class="setting-description">Capture high-resolution images on retina displays</div>
+        <div class="setting-control">
+          <div class="toggle-switch active" id="highDPI"></div>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Auto-Analyze Screenshots</label>
+        <div class="setting-description">Automatically open AI analysis dialog after capture</div>
+        <div class="setting-control">
+          <div class="toggle-switch" id="autoAnalyze"></div>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Save Screenshots Locally</label>
+        <div class="setting-description">Save a copy of screenshots to your Downloads folder</div>
+        <div class="setting-control">
+          <div class="toggle-switch" id="saveLocally"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">🎨 Interface Preferences</h2>
+
+      <div class="setting-item">
+        <label class="setting-label">Theme</label>
+        <div class="setting-description">Choose your preferred color theme</div>
+        <div class="setting-control">
+          <select class="form-select" id="theme">
+            <option value="auto">Auto (Follow System)</option>
+            <option value="light">Light Theme</option>
+            <option value="dark">Dark Theme</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Smooth Animations</label>
+        <div class="setting-description">Enable smooth transitions and animations</div>
+        <div class="setting-control">
+          <div class="toggle-switch active" id="animations"></div>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Sound Effects</label>
+        <div class="setting-description">Play sound feedback for actions</div>
+        <div class="setting-control">
+          <div class="toggle-switch" id="soundEffects"></div>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Show Tooltips</label>
+        <div class="setting-description">Display helpful tooltips and instructions</div>
+        <div class="setting-control">
+          <div class="toggle-switch active" id="showTooltips"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">⚡ Analysis Settings</h2>
+
+      <div class="setting-item">
+        <label class="setting-label">Default Analysis Mode</label>
+        <div class="setting-description">Choose the default analysis type for screenshots</div>
+        <div class="setting-control">
+          <select class="form-select" id="defaultAnalysis">
+            <option value="comprehensive">Comprehensive Analysis</option>
+            <option value="ocr">Text Extraction (OCR)</option>
+            <option value="ui">UI/Interface Analysis</option>
+            <option value="data">Data/Chart Analysis</option>
+            <option value="custom">Always Ask</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Analysis Timeout</label>
+        <div class="setting-description">Maximum time to wait for AI response (seconds)</div>
+        <div class="setting-control">
+          <input type="number" class="form-input" id="analysisTimeout" min="10" max="120" value="60" style="max-width: 100px;">
+          <span style="color: var(--text-muted); font-size: 13px;">seconds</span>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label">Auto-Copy Results</label>
+        <div class="setting-description">Automatically copy analysis results to clipboard</div>
+        <div class="setting-control">
+          <div class="toggle-switch" id="autoCopyResults"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">⌨️ Keyboard Shortcuts</h2>
+
+      <div class="keyboard-shortcuts">
+        <div class="shortcut-label">Full Page Screenshot</div>
+        <div class="shortcut-keys">
+          <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">F</span>
+        </div>
+
+        <div class="shortcut-label">Region Screenshot</div>
+        <div class="shortcut-keys">
+          <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">R</span>
+        </div>
+
+        <div class="shortcut-label">Element Screenshot</div>
+        <div class="shortcut-keys">
+          <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">E</span>
+        </div>
+
+        <div class="shortcut-label">Analyze Image</div>
+        <div class="shortcut-keys">
+          <span class="key">Ctrl</span> + <span class="key">Enter</span>
+        </div>
+
+        <div class="shortcut-label">Cancel/Close</div>
+        <div class="shortcut-keys">
+          <span class="key">Escape</span>
+        </div>
+
+        <div class="shortcut-label">Open Settings</div>
+        <div class="shortcut-keys">
+          <span class="key">Ctrl</span> + <span class="key">,</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn primary" id="saveSettings">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+          <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+        </svg>
+        Save Settings
+      </button>
+      <button class="btn" id="resetSettings">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+          <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+        </svg>
+        Reset to Defaults
+      </button>
+      <button class="btn" id="exportSettings">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+        </svg>
+        Export Settings
+      </button>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="version-info">
+      <div>Vision AI Pro v2.0 - Advanced Visual Intelligence</div>
+      <div style="margin-top: 8px; font-size: 12px;">
+        Made with ❤️ for enhanced productivity and AI-powered analysis
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Settings Management System
+    class SettingsManager {
+      constructor() {
+        this.defaultSettings = {
+          // AI Provider Settings
+          defaultProvider: 'openai',
+          openaiKey: '',
+          anthropicKey: '',
+          googleKey: '',
+
+          // Screenshot Settings
+          imageFormat: 'png',
+          imageQuality: 90,
+          highDPI: true,
+          autoAnalyze: false,
+          saveLocally: false,
+
+          // Interface Settings
+          theme: 'auto',
+          animations: true,
+          soundEffects: false,
+          showTooltips: true,
+
+          // Analysis Settings
+          defaultAnalysis: 'comprehensive',
+          analysisTimeout: 60,
+          autoCopyResults: false
+        };
+
+        this.init();
+      }
+
+      async init() {
+        await this.loadSettings();
+        this.setupEventListeners();
+        this.applyTheme();
+      }
+
+      async loadSettings() {
+        try {
+          const result = await chrome.storage.sync.get(this.defaultSettings);
+          this.settings = { ...this.defaultSettings, ...result };
+          this.populateForm();
+        } catch (error) {
+          console.error('Error loading settings:', error);
+          this.settings = { ...this.defaultSettings };
+          this.populateForm();
+        }
+      }
+
+      populateForm() {
+        // Populate all form fields with current settings
+        Object.keys(this.settings).forEach(key => {
+          const element = document.getElementById(key);
+          if (!element) return;
+
+          if (element.type === 'checkbox') {
+            element.checked = this.settings[key];
+          } else if (element.classList.contains('toggle-switch')) {
+            element.classList.toggle('active', this.settings[key]);
+          } else {
+            element.value = this.settings[key];
+          }
+        });
+      }
+
+      setupEventListeners() {
+        // Save button
+        document.getElementById('saveSettings').addEventListener('click', () => this.saveSettings());
+
+        // Reset button
+        document.getElementById('resetSettings').addEventListener('click', () => this.resetSettings());
+
+        // Export button
+        document.getElementById('exportSettings').addEventListener('click', () => this.exportSettings());
+
+        // Toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+          toggle.addEventListener('click', () => {
+            toggle.classList.toggle('active');
+          });
+        });
+
+        // Theme change
+        document.getElementById('theme').addEventListener('change', (e) => {
+          this.settings.theme = e.target.value;
+          this.applyTheme();
+        });
+
+        // Real-time validation for API keys
+        ['openaiKey', 'anthropicKey', 'googleKey'].forEach(keyId => {
+          const input = document.getElementById(keyId);
+          if (input) {
+            input.addEventListener('input', () => this.validateApiKey(keyId, input.value));
+          }
+        });
+      }
+
+      async saveSettings() {
+        try {
+          // Collect all settings from form
+          const newSettings = {};
+
+          // Text inputs and selects
+          ['defaultProvider', 'openaiKey', 'anthropicKey', 'googleKey', 'imageFormat',
+           'theme', 'defaultAnalysis'].forEach(key => {
+            const element = document.getElementById(key);
+            if (element) newSettings[key] = element.value;
+          });
+
+          // Number inputs
+          ['imageQuality', 'analysisTimeout'].forEach(key => {
+            const element = document.getElementById(key);
+            if (element) newSettings[key] = parseInt(element.value);
+          });
+
+          // Toggle switches
+          ['highDPI', 'autoAnalyze', 'saveLocally', 'animations', 'soundEffects',
+           'showTooltips', 'autoCopyResults'].forEach(key => {
+            const element = document.getElementById(key);
+            if (element) newSettings[key] = element.classList.contains('active');
+          });
+
+          // Save to storage
+          await chrome.storage.sync.set(newSettings);
+          this.settings = { ...this.settings, ...newSettings };
+
+          this.showStatus('Settings saved successfully!', 'success');
+          this.applyTheme();
+
+        } catch (error) {
+          console.error('Error saving settings:', error);
+          this.showStatus('Error saving settings. Please try again.', 'error');
+        }
+      }
+
+      async resetSettings() {
+        if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
+          try {
+            await chrome.storage.sync.clear();
+            this.settings = { ...this.defaultSettings };
+            this.populateForm();
+            this.applyTheme();
+            this.showStatus('Settings reset to defaults.', 'success');
+          } catch (error) {
+            console.error('Error resetting settings:', error);
+            this.showStatus('Error resetting settings.', 'error');
+          }
+        }
+      }
+
+      exportSettings() {
+        const exportData = {
+          version: '2.0',
+          timestamp: new Date().toISOString(),
+          settings: this.settings
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `vision-ai-pro-settings-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        this.showStatus('Settings exported successfully!', 'success');
+      }
+
+      applyTheme() {
+        const theme = this.settings.theme;
+        const body = document.body;
+
+        if (theme === 'dark') {
+          body.setAttribute('data-theme', 'dark');
+        } else if (theme === 'light') {
+          body.removeAttribute('data-theme');
+        } else {
+          // Auto theme - follow system preference
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.setAttribute('data-theme', 'dark');
+          } else {
+            body.removeAttribute('data-theme');
+          }
+        }
+      }
+
+      validateApiKey(provider, key) {
+        const input = document.getElementById(provider);
+        if (!key) return;
+
+        let isValid = false;
+        switch (provider) {
+          case 'openaiKey':
+            isValid = key.startsWith('sk-') && key.length > 20;
+            break;
+          case 'anthropicKey':
+            isValid = key.startsWith('sk-ant-') && key.length > 20;
+            break;
+          case 'googleKey':
+            isValid = key.length > 20;
+            break;
+        }
+
+        input.style.borderColor = isValid ? 'var(--success)' : 'var(--error)';
+      }
+
+      showStatus(message, type) {
+        const statusEl = document.getElementById('statusMessage');
+        statusEl.textContent = message;
+        statusEl.className = `status-message ${type}`;
+        statusEl.style.display = 'block';
+
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    // Test API Key function
+    async function testApiKey(provider) {
+      const keyInput = document.getElementById(provider + 'Key');
+      const key = keyInput.value.trim();
+
+      if (!key) {
+        alert('Please enter an API key first.');
+        return;
+      }
+
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Testing...';
+      button.disabled = true;
+
+      try {
+        // Send test request to background script
+        const response = await chrome.runtime.sendMessage({
+          action: 'testApiKey',
+          provider: provider,
+          key: key
+        });
+
+        if (response.success) {
+          alert('✅ API key is valid and working!');
+          keyInput.style.borderColor = 'var(--success)';
+        } else {
+          alert('❌ API key test failed: ' + response.error);
+          keyInput.style.borderColor = 'var(--error)';
+        }
+      } catch (error) {
+        alert('❌ Error testing API key: ' + error.message);
+        keyInput.style.borderColor = 'var(--error)';
+      } finally {
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+
+    // Initialize settings manager when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      new SettingsManager();
+    });
+
+    // Handle system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (window.settingsManager && window.settingsManager.settings.theme === 'auto') {
+        window.settingsManager.applyTheme();
+      }
+    });
+  </script>
+</body>
+</html>

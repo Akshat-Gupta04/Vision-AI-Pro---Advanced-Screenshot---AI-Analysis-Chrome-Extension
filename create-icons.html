@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vision AI Pro - Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .icon-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .icon-item {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vision AI Pro - Icon Generator</h1>
+    <p>Generate PNG icons for the Chrome extension</p>
+    
+    <div class="icon-container">
+        <div class="icon-item">
+            <h3>16x16</h3>
+            <canvas id="icon16" width="16" height="16"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon16', 16)">Download</button>
+        </div>
+        
+        <div class="icon-item">
+            <h3>32x32</h3>
+            <canvas id="icon32" width="32" height="32"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon32', 32)">Download</button>
+        </div>
+        
+        <div class="icon-item">
+            <h3>48x48</h3>
+            <canvas id="icon48" width="48" height="48"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon48', 48)">Download</button>
+        </div>
+        
+        <div class="icon-item">
+            <h3>128x128</h3>
+            <canvas id="icon128" width="128" height="128"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon128', 128)">Download</button>
+        </div>
+    </div>
+    
+    <button onclick="generateAllIcons()" style="background: #10b981; font-size: 16px; padding: 12px 24px;">
+        Generate All Icons
+    </button>
+    
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 128; // Base design on 128px
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#6366f1');
+            gradient.addColorStop(1, '#8b5cf6');
+            
+            // Draw background circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 2*scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw camera/screenshot icon
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2 * scale;
+            
+            // Camera body
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const rectWidth = size * 0.6;
+            const rectHeight = size * 0.4;
+            const rectX = centerX - rectWidth / 2;
+            const rectY = centerY - rectHeight / 2;
+            
+            ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+            
+            // Camera lens (circle)
+            ctx.fillStyle = '#6366f1';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, size * 0.15, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // AI spark/star effect
+            ctx.fillStyle = 'white';
+            const sparkSize = size * 0.08;
+            
+            // Top right spark
+            ctx.beginPath();
+            ctx.arc(centerX + size * 0.25, centerY - size * 0.25, sparkSize, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Bottom left spark
+            ctx.beginPath();
+            ctx.arc(centerX - size * 0.25, centerY + size * 0.25, sparkSize * 0.7, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Top left small spark
+            ctx.beginPath();
+            ctx.arc(centerX - size * 0.3, centerY - size * 0.15, sparkSize * 0.5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        function generateAllIcons() {
+            const sizes = [16, 32, 48, 128];
+            sizes.forEach(size => {
+                const canvas = document.getElementById(`icon${size}`);
+                drawIcon(canvas, size);
+            });
+        }
+        
+        function downloadIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = `icon${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate icons on page load
+        window.onload = function() {
+            generateAllIcons();
+        };
+    </script>
+</body>
+</html>
