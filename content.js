@@ -26,6 +26,9 @@ class VisionAIPro {
   setupMessageListener() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       switch (request.action) {
+        case 'ping':
+          sendResponse({ status: 'ready' });
+          return true;
         case 'takeFullScreenshot':
           this.takeFullScreenshot(request.provider);
           break;
@@ -398,6 +401,15 @@ class VisionAIPro {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  getProviderName(provider) {
+    const names = {
+      openai: 'OpenAI',
+      anthropic: 'Anthropic',
+      google: 'Google AI'
+    };
+    return names[provider] || provider;
+  }
+
   showAIDialog(imageData) {
     const dialog = document.createElement('div');
     dialog.className = 'vai-ai-dialog';
@@ -459,10 +471,12 @@ class VisionAIPro {
       </div>
     `;
 
-    // Ensure dialog fits within viewport
-    this.adjustDialogSize(dialog);
-
     document.body.appendChild(dialog);
+
+    // Ensure dialog fits within viewport after it's added to DOM
+    setTimeout(() => {
+      this.adjustDialogSize(dialog);
+    }, 50);
 
     // Get elements
     const textarea = dialog.querySelector('#questionInput');
@@ -504,10 +518,16 @@ class VisionAIPro {
       result.style.display = 'none';
 
       try {
-        const storageData = await chrome.storage.sync.get(['apiKey', 'provider']);
+        // Get settings from new storage structure
+        const storageData = await chrome.storage.sync.get([
+          'defaultProvider', 'openaiKey', 'anthropicKey', 'googleKey'
+        ]);
 
-        if (!storageData.apiKey) {
-          throw new Error('API key not found. Please set it in the extension popup.');
+        const provider = storageData.defaultProvider || this.currentProvider || 'openai';
+        const apiKey = storageData[provider + 'Key'];
+
+        if (!apiKey) {
+          throw new Error(`${this.getProviderName(provider)} API key not found. Please set it in the extension popup.`);
         }
 
         const response = await new Promise((resolve) => {
@@ -515,8 +535,8 @@ class VisionAIPro {
             action: 'analyzeImage',
             imageData: imageData,
             question: question || 'Analyze this image comprehensively. Describe what you see including: visual elements, text content, data/charts/graphs, UI components, objects, people, colors, layout, design patterns, and overall purpose or context. Provide detailed insights about any data, trends, or key information presented.',
-            apiKey: storageData.apiKey,
-            provider: storageData.provider || this.currentProvider
+            apiKey: apiKey,
+            provider: provider
           }, resolve);
         });
 
@@ -694,38 +714,63 @@ class VisionAIPro {
 
   // Adjust dialog size to ensure it fits within viewport and buttons are visible
   adjustDialogSize(dialog) {
-    const viewportHeight = window.innerHeight;
-    const dialogRect = dialog.getBoundingClientRect();
+    // Wait for next frame to ensure DOM is updated
+    requestAnimationFrame(() => {
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
 
-    // If dialog is taller than 85% of viewport, adjust
-    if (dialogRect.height > viewportHeight * 0.85) {
-      const maxHeight = Math.floor(viewportHeight * 0.85);
-      dialog.style.maxHeight = `${maxHeight}px`;
+      // Reset any previous adjustments
+      dialog.style.maxHeight = '';
+      dialog.style.top = '';
+      dialog.style.transform = '';
 
-      // Ensure the dialog content can scroll properly
-      const dialogContent = dialog.querySelector('.vai-dialog-content');
-      if (dialogContent) {
-        const header = dialog.querySelector('.vai-dialog-header');
-        const headerHeight = header ? header.offsetHeight : 0;
-        const contentMaxHeight = maxHeight - headerHeight - 40; // 40px for padding
-        dialogContent.style.maxHeight = `${contentMaxHeight}px`;
+      const dialogRect = dialog.getBoundingClientRect();
 
-        // Add scroll indicator if content overflows
-        if (dialogContent.scrollHeight > dialogContent.clientHeight) {
-          dialogContent.classList.add('has-scroll');
-        } else {
-          dialogContent.classList.remove('has-scroll');
+      // Adjust width for smaller screens
+      if (viewportWidth < 700) {
+        dialog.style.width = '95vw';
+        dialog.style.maxWidth = '95vw';
+      }
+
+      // If dialog is taller than 85% of viewport, adjust
+      if (dialogRect.height > viewportHeight * 0.85) {
+        const maxHeight = Math.floor(viewportHeight * 0.85);
+        dialog.style.maxHeight = `${maxHeight}px`;
+
+        // Ensure the dialog content can scroll properly
+        const dialogContent = dialog.querySelector('.vai-dialog-content');
+        if (dialogContent) {
+          const header = dialog.querySelector('.vai-dialog-header');
+          const headerHeight = header ? header.offsetHeight : 0;
+          const contentMaxHeight = maxHeight - headerHeight - 60; // 60px for padding and margins
+          dialogContent.style.maxHeight = `${contentMaxHeight}px`;
+          dialogContent.style.overflowY = 'auto';
+
+          // Add scroll indicator if content overflows
+          setTimeout(() => {
+            if (dialogContent.scrollHeight > dialogContent.clientHeight) {
+              dialogContent.classList.add('has-scroll');
+            } else {
+              dialogContent.classList.remove('has-scroll');
+            }
+          }, 100);
         }
       }
-    }
 
-    // Ensure dialog is centered and visible
-    const rect = dialog.getBoundingClientRect();
-    if (rect.bottom > viewportHeight) {
-      const newTop = Math.max(20, (viewportHeight - rect.height) / 2);
-      dialog.style.top = `${newTop}px`;
-      dialog.style.transform = 'translateX(-50%)';
-    }
+      // Ensure dialog is centered and visible
+      const updatedRect = dialog.getBoundingClientRect();
+      if (updatedRect.bottom > viewportHeight - 20) {
+        const newTop = Math.max(20, (viewportHeight - updatedRect.height) / 2);
+        dialog.style.top = `${newTop}px`;
+        dialog.style.left = '50%';
+        dialog.style.transform = 'translateX(-50%)';
+      } else {
+        // Center the dialog
+        dialog.style.top = '50%';
+        dialog.style.left = '50%';
+        dialog.style.transform = 'translate(-50%, -50%)';
+      }
+    });
   }
 }
 
