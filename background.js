@@ -17,6 +17,12 @@ class VisionAIBackground {
         case 'analyzeImage':
           this.analyzeImage(request, sendResponse);
           return true;
+        case 'chatWithAI':
+          this.chatWithAI(request, sendResponse);
+          return true;
+        case 'testApiKey':
+          this.testApiKey(request, sendResponse);
+          return true;
         default:
           return false;
       }
@@ -249,6 +255,206 @@ class VisionAIBackground {
 
     const data = await response.json();
     return data.candidates[0].content.parts[0].text;
+  }
+
+  async chatWithAI(request, sendResponse) {
+    try {
+      const { message, provider = 'openai' } = request;
+
+      // Get API key from storage
+      const settings = await chrome.storage.sync.get([provider + 'Key']);
+      const apiKey = settings[provider + 'Key'];
+
+      if (!apiKey) {
+        throw new Error('API key not configured for ' + provider);
+      }
+
+      let response;
+      switch (provider) {
+        case 'openai':
+          response = await this.chatWithOpenAI(message, apiKey);
+          break;
+        case 'anthropic':
+          response = await this.chatWithAnthropic(message, apiKey);
+          break;
+        case 'google':
+          response = await this.chatWithGoogle(message, apiKey);
+          break;
+        default:
+          throw new Error(`Unsupported AI provider: ${provider}`);
+      }
+
+      sendResponse({ success: true, response });
+    } catch (error) {
+      console.error('AI Chat error:', error);
+      sendResponse({ success: false, error: error.message });
+    }
+  }
+
+  async chatWithOpenAI(message, apiKey) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'user',
+            content: message
+          }
+        ],
+        max_tokens: 1000,
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  }
+
+  async chatWithAnthropic(message, apiKey) {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 1000,
+        messages: [
+          {
+            role: 'user',
+            content: message
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Anthropic API error: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.content[0].text;
+  }
+
+  async chatWithGoogle(message, apiKey) {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: message
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1000
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Google AI API error: ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+  }
+
+  async testApiKey(request, sendResponse) {
+    try {
+      const { provider, key } = request;
+
+      let isValid = false;
+      let errorMessage = '';
+
+      switch (provider) {
+        case 'openai':
+          isValid = await this.testOpenAIKey(key);
+          break;
+        case 'anthropic':
+          isValid = await this.testAnthropicKey(key);
+          break;
+        case 'google':
+          isValid = await this.testGoogleKey(key);
+          break;
+        default:
+          throw new Error(`Unsupported provider: ${provider}`);
+      }
+
+      sendResponse({ success: isValid, error: isValid ? null : 'API key validation failed' });
+    } catch (error) {
+      console.error('API key test error:', error);
+      sendResponse({ success: false, error: error.message });
+    }
+  }
+
+  async testOpenAIKey(apiKey) {
+    try {
+      const response = await fetch('https://api.openai.com/v1/models', {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async testAnthropicKey(apiKey) {
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-sonnet-20240229',
+          max_tokens: 10,
+          messages: [
+            {
+              role: 'user',
+              content: 'Hi'
+            }
+          ]
+        })
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async testGoogleKey(apiKey) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
   }
 }
 
